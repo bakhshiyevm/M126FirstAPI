@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Services;
+
 using Services.Abstract;
 using DataAccess.Entities;
 
@@ -11,26 +13,26 @@ namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ProductController : ControllerBase
     {
 
-        private readonly IUserService _userService;
+        private readonly IProductService _ProductService;
 
-        public UserController(IUserService userService)
+        public ProductController(IProductService ProductService)
         {
-            _userService = userService;
+            _ProductService = ProductService;
         }
 
         [HttpGet]
-        [Route("getUsers")]
+        [Route("getProducts")]
         public IActionResult Get()
         {
 
             try
             {
-                var users = _userService.Get();
+                var Products = _ProductService.Get();
 
-                return Ok(users);
+                return Ok(Products);
 
             }
             catch (Exception e)
@@ -44,45 +46,45 @@ namespace Presentation.Controllers
 
 
         [HttpGet]
-        [Route("getUser/{id}")]
+        [Route("getProduct/{id}")]
         public IActionResult Get([FromRoute] int id)
         {
 
-            var user = _userService.Get(id);
+            var Product = _ProductService.Get(id);
 
-            return Ok(user);
+            return Ok(Product);
         }
 
 
 
         [HttpPost]
-        [Route("createUser")]
-        public IActionResult Create([FromBody] User user)
+        [Route("createProduct")]
+        public IActionResult Create([FromBody] Product Product)
         {
 
-            _userService.Create(user);
+            _ProductService.Create(Product);
             return Ok();
         }
 
 
 
         [HttpPut]
-        [Route("updateUser")]
-        public IActionResult Update([FromBody] User user)
+        [Route("updateProduct")]
+        public IActionResult Update([FromBody] Product Product)
         {
 
-            _userService.Update(user);
+            _ProductService.Update(Product);
             return Ok();
         }
 
 
 
         [HttpDelete]
-        [Route("deleteUser/{id}")]
+        [Route("deleteProduct/{id}")]
         public IActionResult Delete([FromRoute] int id)
         {
 
-            _userService.Delete(id);
+            _ProductService.Delete(id);
             return Ok();
         }
     }

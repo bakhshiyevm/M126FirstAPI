@@ -1,12 +1,16 @@
+using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Services;
+using Services.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +31,14 @@ namespace Presentation
         public void ConfigureServices(IServiceCollection services)
         {
 
+            services.AddDbContext<AppDbContext>(
+                x=>x.UseSqlite(
+                    Configuration.GetConnectionString("DefaultConnection")
+                    ));
+
+            services.AddScoped<IUserService,UserService>();
+            services.AddScoped<IProductService,ProductService>();
+            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
