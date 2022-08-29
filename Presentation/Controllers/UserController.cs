@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using Services;
 using Services.Abstract;
 using DataAccess.Entities;
+using DTO;
 
 namespace Presentation.Controllers
 {
@@ -49,6 +50,10 @@ namespace Presentation.Controllers
         {
 
             var user = _userService.Get(id);
+            if (user == null) 
+            {
+                return NotFound();
+            }
 
             return Ok(user);
         }
@@ -57,7 +62,7 @@ namespace Presentation.Controllers
 
         [HttpPost]
         [Route("createUser")]
-        public IActionResult Create([FromBody] User user)
+        public IActionResult Create([FromBody] UserDTO user)
         {
 
             _userService.Create(user);
@@ -68,7 +73,7 @@ namespace Presentation.Controllers
 
         [HttpPut]
         [Route("updateUser")]
-        public IActionResult Update([FromBody] User user)
+        public IActionResult Update([FromBody] UserDTO user)
         {
 
             _userService.Update(user);

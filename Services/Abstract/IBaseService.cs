@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Services.Abstract
 {
-    public interface IBaseService<TEntity>
+    public interface IBaseService<TRqDTO, TEntity, TRsDTO>
     {
-        public IEnumerable<TEntity> Get();
-        public TEntity Get(int id);
-        public void Create(TEntity user);
-        public void Update(TEntity user);
-        public void Delete(int id);
+        public IEnumerable<TRsDTO> Get();
+        public TRsDTO Get(int id);
+        public TRsDTO Create(TRqDTO user);
+        public void Update(TRqDTO user);
+        public int Delete(int id);
     }
 }

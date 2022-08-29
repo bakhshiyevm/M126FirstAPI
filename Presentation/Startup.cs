@@ -1,3 +1,4 @@
+using AutoMapper;
 using DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Services;
 using Services.Abstract;
+using Services.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,8 +39,17 @@ namespace Presentation
                     ));
 
             services.AddScoped<IUserService,UserService>();
-            services.AddScoped<IProductService,ProductService>();
-            
+
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapperProfile());
+            });
+
+            services.AddSingleton(mappingConfig.CreateMapper());
+
+
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

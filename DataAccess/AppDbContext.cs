@@ -6,9 +6,10 @@ namespace DataAccess
 {
     public class AppDbContext : DbContext
     {
-        public DbSet<User> USERS { get; set; }
+        public DbSet<User> Users { get; set; }
         public AppDbContext(DbContextOptions options) : base(options)
         {
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
     }
