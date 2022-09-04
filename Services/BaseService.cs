@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
+using Repo.Abstract;
 using Services.Abstract;
 using System;
 using System.Collections.Generic;
@@ -16,21 +17,19 @@ namespace Services
     {
 
         protected readonly IMapper _mapper;
+        protected readonly IRepository<TEntity> _repo;
 
-        protected readonly AppDbContext _dbContext;
 
-        protected readonly DbSet<TEntity> _dbSet;
-
-		protected BaseService(IMapper mapper, AppDbContext dbContext)
+		protected BaseService(IMapper mapper,IRepository<TEntity> repo)
 		{
 			_mapper = mapper;
-			_dbContext = dbContext;
-			_dbSet = dbContext.Set<TEntity>();
+            _repo = repo;
 		}
 
 		public virtual IEnumerable<TRsDTO> Get()
         {
-            var ent = _dbSet.ToList();
+
+            var ent = _repo.Get();
 
             var dtos = _mapper.Map<IEnumerable<TRsDTO>>(ent);   
 
@@ -40,7 +39,8 @@ namespace Services
 
         public virtual TRsDTO Get(int id)
         {
-            var ent = _dbSet.Find(id);
+
+            var ent = _repo.Get(id);
 
             var rsdto = _mapper.Map<TRsDTO>(ent);
 
@@ -53,11 +53,9 @@ namespace Services
 
             var ent = _mapper.Map<TEntity>(dto);
 
-            ent.CreatedAt = DateTime.Now;
 
-            _dbSet.Add(ent);
-            _dbContext.SaveChanges();
-
+            _repo.Create(ent);
+            
             var rsdto = _mapper.Map<TRsDTO>(ent);
 
 
@@ -68,18 +66,12 @@ namespace Services
         {
             var ent = _mapper.Map<TEntity>(dto);
  
-            ent.UpdatedAt = DateTime.Now;
-            _dbSet.Update(ent);
-
-            _dbContext.SaveChanges();
+              _repo.Update(ent);
         }
 
         public virtual int Delete(int id)
         {
-            var ent = _dbSet.Find(id);
-            _dbSet.Remove(ent);
-            _dbContext.SaveChanges();
-            return ent.Id;
+            return _repo.Delete(id);
 
         }
     }

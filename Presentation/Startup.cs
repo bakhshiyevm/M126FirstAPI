@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Repo.Abstract;
+using Repo;
 using Services;
 using Services.Abstract;
 using Services.Config;
@@ -17,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.Entities;
 
 namespace Presentation
 {
@@ -37,7 +40,9 @@ namespace Presentation
                 x=>x.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")
                     ));
+            services.AddSingleton(typeof(IRepository<>), typeof(Repository<>));
 
+            services.AddSingleton<IUserRepository, UserRepository>();
             services.AddScoped<IUserService,UserService>();
 
 

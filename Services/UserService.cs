@@ -2,6 +2,7 @@
 using DataAccess;
 using DataAccess.Entities;
 using DTO;
+using Repo.Abstract;
 using Services.Abstract;
 using System;
 using System.Collections.Generic;
@@ -10,13 +11,16 @@ namespace Services
 {
     public class UserService : BaseService<UserDTO, User, UserDTO>, IUserService
     {
-		public UserService(IMapper mapper, AppDbContext dbContext) : base(mapper, dbContext)
+        private IUserRepository _userRepo;
+		public UserService(IMapper mapper, IRepository<User> repo, IUserRepository userRepo) : base(mapper, repo)
 		{
 		}
 
 		public bool Login(UserDTO user)
         {
-            return true;
+            var ent = _mapper.Map<User>(user);
+            return _userRepo.Login(ent);
+            
         }
     }
 }

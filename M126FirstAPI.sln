@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Services", "Services\Servic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess", "DataAccess\DataAccess.csproj", "{8245C7FC-EF44-4399-91FE-ED9D125A74A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTO", "DTO\DTO.csproj", "{5A388837-EC5E-4A5E-B46D-2685A193BB53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTO", "DTO\DTO.csproj", "{5A388837-EC5E-4A5E-B46D-2685A193BB53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repo", "Repository\Repo.csproj", "{E4942B66-FB60-479F-86F1-1EB0320E8063}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5A388837-EC5E-4A5E-B46D-2685A193BB53}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5A388837-EC5E-4A5E-B46D-2685A193BB53}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5A388837-EC5E-4A5E-B46D-2685A193BB53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4942B66-FB60-479F-86F1-1EB0320E8063}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4942B66-FB60-479F-86F1-1EB0320E8063}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4942B66-FB60-479F-86F1-1EB0320E8063}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4942B66-FB60-479F-86F1-1EB0320E8063}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
