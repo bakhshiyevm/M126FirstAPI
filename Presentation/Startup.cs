@@ -1,5 +1,6 @@
 using AutoMapper;
 using DataAccess;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -32,6 +33,26 @@ namespace Presentation
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie((opt =>
+                {
+                    //opt.LoginPath = "/SignIn";
+                    opt.Cookie.HttpOnly = true;
+                    opt.Cookie.Name = "AuthCookie";
+                    opt.Cookie.MaxAge = TimeSpan.FromSeconds(300);
+
+                    opt.Events = new CookieAuthenticationEvents
+                    {
+                        OnRedirectToLogin = x =>
+                        {
+                            x.HttpContext.Response.StatusCode = 401;
+                            return Task.CompletedTask;
+                        }
+                    };
+                }));
 
             services.AddDbContext<AppDbContext>(
                 x=>x.UseSqlite(
@@ -67,9 +88,14 @@ namespace Presentation
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Presentation v1"));
             }
 
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseSession();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
@@ -77,6 +103,9 @@ namespace Presentation
             {
                 endpoints.MapControllers();
             });
+
+
+
         }
     }
 }

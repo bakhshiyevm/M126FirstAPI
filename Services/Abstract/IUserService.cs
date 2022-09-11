@@ -10,6 +10,6 @@ namespace Services.Abstract
 {
     public interface IUserService : IBaseService<UserDTO, User, UserDTO>
     {
-        public bool Login(UserDTO user);
+        public UserDTO Login(UserDTO user);
     }
 }

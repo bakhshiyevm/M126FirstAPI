@@ -7,11 +7,16 @@ using Services;
 using Services.Abstract;
 using DataAccess.Entities;
 using DTO;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Presentation.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
 
@@ -24,21 +29,19 @@ namespace Presentation.Controllers
 
         [HttpGet]
         [Route("getUsers")]
+        [Authorize(Roles = "Test")]
         public IActionResult Get()
         {
-
             try
             {
                 var users = _userService.Get();
 
                 return Ok(users);
-
             }
             catch (Exception e)
             {
                 return Problem(e.Message);
             }
-
 
         }
 
@@ -46,6 +49,7 @@ namespace Presentation.Controllers
 
         [HttpGet]
         [Route("getUser/{id}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Get([FromRoute] int id)
         {
 
@@ -58,15 +62,55 @@ namespace Presentation.Controllers
             return Ok(user);
         }
 
+        [HttpPost]
+        [Route("signIn")]
+        [AllowAnonymous]
+        public IActionResult SignIn([FromBody] UserDTO user)
+        {
+			try
+			{
+                var res = _userService.Login(user);
+                if (res == null)
+                {
+                    return NotFound();
+                }
 
+                Authenticate(res);
+
+                return Ok(user);
+            }
+            catch (Exception e)
+            {
+
+                return Problem(e.Message);
+            }
+
+        }
+
+
+        [HttpPost]
+        [Route("SignOut")]
+        public IActionResult SignOut()
+        {
+            HttpContext.SignOutAsync();
+            return Ok();
+        }
 
         [HttpPost]
         [Route("createUser")]
         public IActionResult Create([FromBody] UserDTO user)
         {
+			try
+			{
+                _userService.Create(user);
+                return Ok();
+            }
+			catch (Exception e)
+			{
 
-            _userService.Create(user);
-            return Ok();
+                return Problem(e.Message);
+			}
+
         }
 
 
@@ -89,6 +133,24 @@ namespace Presentation.Controllers
 
             _userService.Delete(id);
             return Ok();
+        }
+
+
+        private void Authenticate(UserDTO user)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim("Id", user.Id.ToString()),
+                new Claim("Music", "techno"),
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, "Admin"),
+
+            };
+
+
+            ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie");
+
+            HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
     }
 }
